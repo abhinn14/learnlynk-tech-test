@@ -142,26 +142,8 @@ Build a small page that:
 
 ## Task 5 — Stripe Checkout (Written Answer)
 
-Add a section titled:
-
-```
 ## Stripe Answer
-```
 
-Write **8–12 lines** describing how you would implement a Stripe Checkout flow for an application fee, including:
+To implement Stripe Checkout for an application fee, I would start by creating a "payment_requests" row when the user initiates the payment. Then, I'll store the application ID, amount, and a status (like pending). Then, I would call Stripe’s API to create a checkout session, passing the fee amount, success/cancel URLs, and metadata such as the "payment_request_id". The returned "session.id" would be saved back into Supabase. I would also store the session URL returned by Stripe so the frontend can redirect the user to the Checkout page.
 
-- When you insert a `payment_requests` row  
-- When you call Stripe  
-- What you store from the checkout session  
-- How you handle webhooks  
-- How you update the application after payment succeeds  
-
----
-
-## Submission
-
-1. Push your work to a public GitHub repo.  
-2. Add your Stripe answer at the bottom of this file.  
-3. Share the link.
-
-Good luck.
+On the backend, I would set up a webhook endpoint to listen for the "checkout.session.completed" event. Once the payment is confirmed, I would verify the webhook signature, read the metadata, and update the corresponding "payment_requests" row to completed, along with storing payment details like the payment intent ID. Finally, I would update the application’s stage or timeline to reflect that the fee has been successfully paid.
